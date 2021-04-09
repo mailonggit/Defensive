@@ -5,20 +5,23 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private float speed;
-    [SerializeField] private Node xNode;
-    [SerializeField] private Node yNode;
-    [SerializeField] private float offset;
-    //[SerializeField] Vector3 maxTile;
-    private float xMax, yMax, xMin, yMin;    
+    private float xMax, yMin;
+    [SerializeField] Transform maxNode;
+    private float xOffset, yOffset;
     // Start is called before the first frame update
     private void Start()
-    {        
-        xMax = xNode.transform.position.x - 2 * offset;
-        yMax = yNode.transform.position.y - offset - 1;
-        xMin = yMin = 0;
+    {
+        SetLimit();
+        xOffset = Mathf.RoundToInt(maxNode.GetComponent<SpriteRenderer>().bounds.size.x);
+        yOffset = xOffset;
     }
     void Update()
     {
+        if (GameManager.isGameOver)
+        {
+            this.enabled = false;
+            return;
+        }
         MoveCamera();
     }
     private void MoveCamera()
@@ -40,9 +43,15 @@ public class CameraController : MonoBehaviour
         {
             this.transform.Translate(Vector3.up * Time.deltaTime * this.speed);            
         }        
-        float x = Mathf.Clamp(transform.position.x, xMin, xMax);
-        float y = Mathf.Clamp(transform.position.y, yMin, yMax);
+        float x = Mathf.Clamp(transform.position.x, -xOffset, xMax + xOffset);
+        float y = Mathf.Clamp(transform.position.y, 0, yOffset);        
         transform.position = new Vector3(x, y, -10);
+    }
+    private void SetLimit()
+    {
+        Vector3 worldPoint = Camera.main.ViewportToWorldPoint(new Vector3(1, 0));        
+        xMax = maxNode.position.x - worldPoint.x;
+        yMin = maxNode.position.y - worldPoint.y;
     }
     
 }

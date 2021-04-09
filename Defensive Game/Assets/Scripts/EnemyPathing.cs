@@ -6,7 +6,12 @@ public class EnemyPathing : MonoBehaviour
 {
     [SerializeField] private float speed;
     private int waypointIndex = 0;
-    private Transform targetPoint;
+    private Transform targetPoint;    
+    public float Speed
+    {
+        get => this.speed;
+        set { this.speed = value; }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -28,10 +33,15 @@ public class EnemyPathing : MonoBehaviour
     {
         if (waypointIndex >= Waypoints.points.Length - 1)
         {
-            Destroy(gameObject);
+            FinalPath();
             return;
         }
         waypointIndex++;
         targetPoint = Waypoints.points[waypointIndex];
+    }
+    void FinalPath()
+    {        
+        PlayerInfo.Lives--;
+        Destroy(gameObject);
     }
 }

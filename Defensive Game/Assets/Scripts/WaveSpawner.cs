@@ -28,12 +28,14 @@ public class WaveSpawner : MonoBehaviour
     }
     IEnumerator SpawnWave()
     {
+        waveIndex++;
+        PlayerInfo.Rounds++;
         for (int i = 0; i < waveIndex; i++)
         {
             SpawnEnemy();
             yield return new WaitForSeconds(0.5f);
         }
-        waveIndex++;
+        
     }
     private void SpawnEnemy()
     {

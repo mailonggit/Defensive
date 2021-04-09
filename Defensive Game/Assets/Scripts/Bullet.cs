@@ -6,7 +6,8 @@ public class Bullet : MonoBehaviour
 {
     private Transform target;
     [SerializeField] private float speed;
-    [SerializeField] GameObject impactEffect;
+    [SerializeField] private GameObject impactEffect;
+    [SerializeField] private int damage;
     public void Seek(Transform target)
     {
         this.target = target;
@@ -35,5 +36,16 @@ public class Bullet : MonoBehaviour
         bulletEffect.transform.position = new Vector3(bulletEffect.transform.position.x, bulletEffect.transform.position.y, -5);
         Destroy(bulletEffect, 0.5f);
         Destroy(gameObject);
+        Damage(target);
+    }
+    private void Damage(Transform enemy)
+    {
+        Enemy e = enemy.GetComponent<Enemy>();
+
+        if (e != null)
+        {
+            e.TakeDamage(damage);
+        }
+        
     }
 }

@@ -5,7 +5,9 @@ using UnityEngine;
 public class BuildManager : MonoBehaviour
 {
     public static BuildManager instance;
-    private GameObject weaponToBuild;    
+    private WeaponBluePrint weaponToBuild;
+    private Node selectedNode;
+    [SerializeField] NodeUI nodeUI;
     private void Awake()
     {
         if (instance != null)
@@ -15,14 +17,34 @@ public class BuildManager : MonoBehaviour
         instance = this;
     }
     
-
-    public GameObject GetWeaponToBuild()
+    public bool CanBuild
     {
-        return weaponToBuild;
+        get => weaponToBuild != null;
     }
-
-    public void SetWeaponToBuild(GameObject weapon)
+    public void SelectNode(Node node)
+    {
+        if (selectedNode == node)
+        {
+            DeselectNode();
+            return;
+        }
+        selectedNode = node;
+        weaponToBuild = null;
+        nodeUI.SetTarget(node);
+       
+    }
+    public void DeselectNode()
+    {
+        selectedNode = null;
+        nodeUI.TurnOffUI();
+    }
+    public void SelectWeaponToBuild(WeaponBluePrint weapon)
     {
         weaponToBuild = weapon;
+        DeselectNode(); 
+    }
+    public WeaponBluePrint GetWeaponToBuild()
+    {
+        return weaponToBuild;
     }
 }

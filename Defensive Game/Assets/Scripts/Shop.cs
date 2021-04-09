@@ -5,19 +5,24 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     private BuildManager buildManager;
-    [SerializeField] private GameObject weapon1Prefab;
-    [SerializeField] private GameObject weapon2Prefab;
+    [SerializeField] private WeaponBluePrint weapon1Prefab;
+    [SerializeField] private WeaponBluePrint weapon2Prefab;
+    [SerializeField] private WeaponBluePrint weapon3Prefab;
     private void Start()
     {
         buildManager = BuildManager.instance;
     }
     public void PurchaseWeapon1()
     {
-        buildManager.SetWeaponToBuild(weapon1Prefab);
+        buildManager.SelectWeaponToBuild(weapon1Prefab);
     }
     public void PurchaseWeapon2()
     {
-        buildManager.SetWeaponToBuild(weapon2Prefab);
+        buildManager.SelectWeaponToBuild(weapon2Prefab);
+    }
+    public void PurchaseWeapon3()
+    {
+        buildManager.SelectWeaponToBuild(weapon3Prefab);
     }
 
 }
