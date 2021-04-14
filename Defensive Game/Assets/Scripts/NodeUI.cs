@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 public class NodeUI : MonoBehaviour
 {
-    [SerializeField] GameObject ui;
+    [SerializeField] GameObject upAndSellUI;
     private Node target;
     [SerializeField] private TextMeshProUGUI upgradeCost, sellCost;
     [SerializeField] Vector3 offset;
@@ -15,28 +15,39 @@ public class NodeUI : MonoBehaviour
         this.target = _target;
 
         transform.position = target.transform.position - offset;
-        if (target.isUpgraded)
+        if (target.IsFullyUpgraded > 2)
         {
             upgradeCost.text = "Finished";
             upgradeBtn.interactable = false;            
         }
-        else
+        else if(target.IsFullyUpgraded == 1)
         {
-            upgradeCost.text = "$" + target.WeaponBluePrint.upgradeCost.ToString();
+            upgradeCost.text = "$" + target.WeaponBluePrint.Up1Cost.ToString();
+            sellCost.text = "$" + target.WeaponBluePrint.SellCost().ToString();
+            upgradeBtn.interactable = true;
+        }
+        else if (target.IsFullyUpgraded == 2)
+        {
+            upgradeCost.text = "$" + target.WeaponBluePrint.Up2Cost.ToString();
             sellCost.text = "$" + target.WeaponBluePrint.SellCost().ToString();
             upgradeBtn.interactable = true;
         }
 
-        ui.SetActive(true);        
+        upAndSellUI.SetActive(true);        
     }
 
     public void TurnOffUI()
     {
-        ui.SetActive(false);
+        upAndSellUI.SetActive(false);
     }
-    public void Upgrade()
+    public void Upgrade1st()
     {
-        target.UpgradeWeapon();
+        target.UpgradeWeapon1st();
+        BuildManager.instance.DeselectNode();
+    }
+    public void Upgrade2nd()
+    {
+        target.UpgradeWeapon2nd();
         BuildManager.instance.DeselectNode();
     }
     public void Sell()

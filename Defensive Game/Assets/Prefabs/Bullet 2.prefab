@@ -71,7 +71,7 @@ SpriteRenderer:
   m_SortingLayerID: 1123500055
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 74ca253f017efe546b0f12d9948b22dc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fa5ac07fc8e8fd74f8a24992d8e0e339, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,4 +97,4 @@ MonoBehaviour:
   speed: 10
   impactEffect: {fileID: 1477910879042616199, guid: 5cbb20151b87a9d458fb456e818b29ae,
     type: 3}
-  damage: 100
+  damage: 40

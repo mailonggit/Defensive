@@ -42,6 +42,7 @@ public class EnemyPathing : MonoBehaviour
     void FinalPath()
     {        
         PlayerInfo.Lives--;
+        WaveSpawner.EnemyAlives--;
         Destroy(gameObject);
     }
 }

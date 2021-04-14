@@ -5,25 +5,26 @@ using UnityEngine.EventSystems;
 public class Node : MonoBehaviour
 {    
     private SpriteRenderer spriteRenderer;
+
     private Color startColor;
+
     private BuildManager buildManager;
+
+    //[SerializeField] GameObject shop;
+    
     public GameObject Weapon { get; set; }
     public WeaponBluePrint WeaponBluePrint { get; set; }
-    public bool isUpgraded { get; set; }
+    public int IsFullyUpgraded { get; set; }
+    
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         startColor = spriteRenderer.color;
         buildManager = BuildManager.instance;
-        isUpgraded = false;
+        IsFullyUpgraded = 1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnMouseDown()
     {
         if (EventSystem.current.IsPointerOverGameObject())
@@ -34,13 +35,14 @@ public class Node : MonoBehaviour
         if (Weapon != null)
         {
             //select instead of building weapon
-            buildManager.SelectNode(this);
-            
+            buildManager.SelectNode(this);            
             return;
         }
         else if (Weapon == null)
         {
             buildManager.DeselectNode();
+            //shop.SetActive(true);
+            //shop.transform.position = this.transform.position;
         }
         if (!buildManager.CanBuild)
         {
@@ -54,18 +56,16 @@ public class Node : MonoBehaviour
     }
     private void BuildWeapon(WeaponBluePrint blueprint)
     {
-        if (PlayerInfo.Money < blueprint.cost)
-        {
-            Debug.Log("Not enough money!");
+        if (PlayerInfo.Money < blueprint.InitialCost)
+        {            
             return;
-
         }
 
         WeaponBluePrint = blueprint;
 
-        GameObject newWeapon = (GameObject)Instantiate(blueprint.prefab, transform.position, Quaternion.identity);
+        GameObject newWeapon = (GameObject)Instantiate(blueprint.InititalPrefab, transform.position, Quaternion.identity);
         Weapon = newWeapon;
-        PlayerInfo.Money -= blueprint.cost;
+        PlayerInfo.Money -= blueprint.InitialCost;
     }
 
     private void OnMouseEnter()
@@ -75,7 +75,7 @@ public class Node : MonoBehaviour
             return;
         }
         if (!buildManager.CanBuild)
-        {
+        {            
             return;
         }
        
@@ -85,9 +85,9 @@ public class Node : MonoBehaviour
     {
         spriteRenderer.color = startColor;
     }
-    public void UpgradeWeapon()
+    public void UpgradeWeapon1st()
     {
-        if (PlayerInfo.Money < WeaponBluePrint.upgradeCost)
+        if (PlayerInfo.Money < WeaponBluePrint.Up1Cost)
         {
             Debug.Log("Not enough money!");
             return;
@@ -98,13 +98,34 @@ public class Node : MonoBehaviour
         Destroy(Weapon);
 
         //build new weapon
-        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.upgradePrefab, transform.position, Quaternion.identity);
+        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Upgrade1Prefab, transform.position, Quaternion.identity);
         Weapon = weapon;
-        PlayerInfo.Money -= WeaponBluePrint.upgradeCost;
+        PlayerInfo.Money -= WeaponBluePrint.Up1Cost;
 
-        isUpgraded = true;
+        IsFullyUpgraded++;
 
-        Debug.Log("Upgraded");
+        Debug.Log("Upgraded 1st successfully!!");
+    }
+    public void UpgradeWeapon2nd()
+    {
+        if (PlayerInfo.Money < WeaponBluePrint.Up2Cost)
+        {
+            Debug.Log("Not enough money!");
+            return;
+
+        }
+
+        //get rid of old weapon
+        Destroy(Weapon);
+
+        //build new weapon
+        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Upgrade2Prefab, transform.position, Quaternion.identity);
+        Weapon = weapon;
+        PlayerInfo.Money -= WeaponBluePrint.Up2Cost;
+
+        IsFullyUpgraded++;
+
+        Debug.Log("Upgraded 2nd successfully!!");
     }
     public void SellWeapon()
     {

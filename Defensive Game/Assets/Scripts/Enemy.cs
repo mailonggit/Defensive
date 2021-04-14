@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Enemy : MonoBehaviour
-{        
+{
+    
     private Animator anim;
-    [SerializeField] int health = 100;
-    [SerializeField] int reward = 50;
+    private float startHealth;
+    [SerializeField] float health;
+    [SerializeField] private Image healthbar;
+    [SerializeField] int reward;
     private EnemyPathing path;
     public bool IsActive
     {
@@ -18,10 +21,12 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         path = GetComponent<EnemyPathing>();
         IsActive = true;
+        startHealth = health;
     }
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         health -= amount;
+        healthbar.fillAmount = health / startHealth;        
         if (health <= 0)
         {            
             Dead();
@@ -33,12 +38,9 @@ public class Enemy : MonoBehaviour
         PlayerInfo.Money += reward;
         anim.SetBool("isDead", true);
         path.Speed = 0;
+        WaveSpawner.EnemyAlives--;
         Destroy(gameObject, 3f);
-    }
-    // Update is called once per frame
-    void Update()
-    {
 
-    }
+    }    
 
 }
