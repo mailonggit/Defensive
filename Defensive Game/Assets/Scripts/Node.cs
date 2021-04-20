@@ -9,20 +9,20 @@ public class Node : MonoBehaviour
     private Color startColor;
 
     private BuildManager buildManager;
-
-    //[SerializeField] GameObject shop;
     
-    public GameObject Weapon { get; set; }
+    public GameObject Weapon { get; set; }    
     public WeaponBluePrint WeaponBluePrint { get; set; }
-    public int IsFullyUpgraded { get; set; }
+    public int UpgradeNum { get; set; }
     
+    public bool IsExist { get; set; }
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         startColor = spriteRenderer.color;
         buildManager = BuildManager.instance;
-        IsFullyUpgraded = 1;
+        UpgradeNum = 1;
+        IsExist = false;
     }
 
     private void OnMouseDown()
@@ -31,32 +31,30 @@ public class Node : MonoBehaviour
         {            
             return;            
         }
-        
-        if (Weapon != null)
+        if (this.gameObject.tag == buildManager.NodeTag)
         {
-            //select instead of building weapon
-            buildManager.SelectNode(this);            
-            return;
-        }
-        else if (Weapon == null)
-        {
-            buildManager.DeselectNode();
-            //shop.SetActive(true);
-            //shop.transform.position = this.transform.position;
-        }
-        if (!buildManager.CanBuild)
-        {
-            return;
-        }
-        if (this.gameObject.tag == "Grass")
-        {
+            if (Weapon != null)
+            {
+                //select instead of building weapon
+                buildManager.SelectNode(this);
+                return;
+            }
+            else if (Weapon == null)
+            {
+                buildManager.SelectNode(this);
+                //buildManager.DeselectNode();         
+            }
+            if (!buildManager.CanBuild)
+            {
+                return;
+            }
             BuildWeapon(buildManager.GetWeaponToBuild());
         }
-        
+                        
     }
-    private void BuildWeapon(WeaponBluePrint blueprint)
+    public void BuildWeapon(WeaponBluePrint blueprint)
     {
-        if (PlayerInfo.Money < blueprint.InitialCost)
+        if (PlayerInfo.Money < blueprint.InitCost)
         {            
             return;
         }
@@ -64,8 +62,12 @@ public class Node : MonoBehaviour
         WeaponBluePrint = blueprint;
 
         GameObject newWeapon = (GameObject)Instantiate(blueprint.InititalPrefab, transform.position, Quaternion.identity);
+
         Weapon = newWeapon;
-        PlayerInfo.Money -= blueprint.InitialCost;
+
+        IsExist = true;
+
+        PlayerInfo.Money -= blueprint.InitCost;        
     }
 
     private void OnMouseEnter()
@@ -77,61 +79,79 @@ public class Node : MonoBehaviour
         if (!buildManager.CanBuild)
         {            
             return;
-        }
-       
-        
+        }               
     }    
     private void OnMouseExit()
     {
         spriteRenderer.color = startColor;
     }
-    public void UpgradeWeapon1st()
+    public void Upgrade1()
     {
         if (PlayerInfo.Money < WeaponBluePrint.Up1Cost)
         {
             Debug.Log("Not enough money!");
             return;
-
         }
 
         //get rid of old weapon
         Destroy(Weapon);
 
         //build new weapon
-        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Upgrade1Prefab, transform.position, Quaternion.identity);
+        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Up1Prefab, transform.position, Quaternion.identity);
         Weapon = weapon;
         PlayerInfo.Money -= WeaponBluePrint.Up1Cost;
 
-        IsFullyUpgraded++;
+        UpgradeNum++;
 
-        Debug.Log("Upgraded 1st successfully!!");
+        Debug.Log("Upgrade " + UpgradeNum + " time successfully");
+        
     }
-    public void UpgradeWeapon2nd()
+    public void Upgrade2()
     {
         if (PlayerInfo.Money < WeaponBluePrint.Up2Cost)
         {
             Debug.Log("Not enough money!");
             return;
-
         }
 
         //get rid of old weapon
         Destroy(Weapon);
 
         //build new weapon
-        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Upgrade2Prefab, transform.position, Quaternion.identity);
+        GameObject weapon = (GameObject)Instantiate(WeaponBluePrint.Up2Prefab, transform.position, Quaternion.identity);
         Weapon = weapon;
         PlayerInfo.Money -= WeaponBluePrint.Up2Cost;
 
-        IsFullyUpgraded++;
+        UpgradeNum++;
 
-        Debug.Log("Upgraded 2nd successfully!!");
+        Debug.Log("Upgrade " + UpgradeNum + " time successfully");
+
     }
-    public void SellWeapon()
+    public void Sell1()
     {
-        PlayerInfo.Money += WeaponBluePrint.SellCost();
+        PlayerInfo.Money += WeaponBluePrint.InitCost / 2;
 
         Destroy(Weapon);
+
         WeaponBluePrint = null;
+    }
+    public void Sell2()
+    {
+        PlayerInfo.Money += WeaponBluePrint.Up1Cost / 2;
+
+        Destroy(Weapon);
+
+        WeaponBluePrint = null;
+    }
+    public void Sell3()
+    {
+        PlayerInfo.Money += WeaponBluePrint.Up2Cost / 2;
+
+        Destroy(Weapon);
+
+        WeaponBluePrint = null;
+
+        //reset
+        UpgradeNum = 1;
     }
 }

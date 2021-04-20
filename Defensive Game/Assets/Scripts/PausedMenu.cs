@@ -5,42 +5,43 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class PausedMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject menuUI  , resumeBtn, pausedBtn;
-    // Start is called before the first frame update
-
+    [SerializeField] private GameObject menuUI, resumeBtn, pausedBtn;
+    
     private void Start()
     {
-        ActivateBtn(false, true);
+        SwapButton(false, true);
     }
     public void PausedGame()
     {        
-        ActivateBtn(true, false);
+        SwapButton(true, false);
         Time.timeScale = 0f;        
     }
     public void ContinueGame()
     {
         menuUI.SetActive(false);
-        ActivateBtn(false, true);
+        SwapButton(false, true);
         Time.timeScale = 1f;
     }
     public void RetryGame()
     {
-        menuUI.SetActive(false);
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        
+        SceneManager.LoadScene("Level-1");        
     }
-    public void Menu()
+    public void DisplayMenu()
     {
-        menuUI.SetActive(true);
-        ActivateBtn(false, true);
         Time.timeScale = 0f;
+        menuUI.SetActive(true);
+        SwapButton(false, true);                
     }
-
-    private void ActivateBtn(bool resume, bool paused)
+    public void BackToMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(0);        
+    }
+    private void SwapButton(bool resume, bool paused)
     {
         resumeBtn.SetActive(resume);
         pausedBtn.SetActive(paused);
     }
-
+   
 }

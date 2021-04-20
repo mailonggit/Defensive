@@ -5,33 +5,36 @@ using TMPro;
 using UnityEngine.UI;
 public class NodeUI : MonoBehaviour
 {
-    [SerializeField] GameObject upAndSellUI;
-    private Node target;
+    [SerializeField] GameObject upAndSellUI;    
     [SerializeField] private TextMeshProUGUI upgradeCost, sellCost;
     [SerializeField] Vector3 offset;
     [SerializeField] Button upgradeBtn;
+    private Node target;
     public void SetTarget(Node _target)
     {
         this.target = _target;
 
         transform.position = target.transform.position - offset;
-        if (target.IsFullyUpgraded > 2)
+        if (target.UpgradeNum > 2)
         {
             upgradeCost.text = "Finished";
-            upgradeBtn.interactable = false;            
+            upgradeBtn.interactable = false;
+            sellCost.text = "$" + (target.WeaponBluePrint.Up2Cost / 2).ToString();            
         }
-        else if(target.IsFullyUpgraded == 1)
+        else
         {
-            upgradeCost.text = "$" + target.WeaponBluePrint.Up1Cost.ToString();
-            sellCost.text = "$" + target.WeaponBluePrint.SellCost().ToString();
+            if (target.UpgradeNum == 1)
+            {
+                upgradeCost.text = "$" + target.WeaponBluePrint.Up1Cost.ToString();
+                sellCost.text = "$" + (target.WeaponBluePrint.InitCost / 2).ToString();
+            }
+            else if (target.UpgradeNum == 2)
+            {
+                upgradeCost.text = "$" + target.WeaponBluePrint.Up2Cost.ToString();
+                sellCost.text = "$" + (target.WeaponBluePrint.Up1Cost / 2).ToString();
+            }
             upgradeBtn.interactable = true;
-        }
-        else if (target.IsFullyUpgraded == 2)
-        {
-            upgradeCost.text = "$" + target.WeaponBluePrint.Up2Cost.ToString();
-            sellCost.text = "$" + target.WeaponBluePrint.SellCost().ToString();
-            upgradeBtn.interactable = true;
-        }
+        }       
 
         upAndSellUI.SetActive(true);        
     }
@@ -40,19 +43,33 @@ public class NodeUI : MonoBehaviour
     {
         upAndSellUI.SetActive(false);
     }
-    public void Upgrade1st()
+    public void Upgrade()
     {
-        target.UpgradeWeapon1st();
-        BuildManager.instance.DeselectNode();
-    }
-    public void Upgrade2nd()
-    {
-        target.UpgradeWeapon2nd();
+        if (target.UpgradeNum == 1)
+        {
+            target.Upgrade1();
+        }
+        else if (target.UpgradeNum == 2)
+        {
+            target.Upgrade2();
+        }
         BuildManager.instance.DeselectNode();
     }
     public void Sell()
     {
-        target.SellWeapon();
+        if (target.UpgradeNum == 1)
+        {
+            target.Sell1();
+        }
+        else if (target.UpgradeNum == 2)
+        {
+            target.Sell2();
+        }
+        else if (target.UpgradeNum == 3)
+        {
+            target.Sell3();
+        }
         BuildManager.instance.DeselectNode();
+        target.IsExist = false;
     }
 }

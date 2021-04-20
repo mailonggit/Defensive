@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    private Transform target;
     [Header("Attributes")]    
     [SerializeField] private float range;
     [SerializeField] private float fireRate;

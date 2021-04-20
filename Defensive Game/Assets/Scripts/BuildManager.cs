@@ -8,6 +8,9 @@ public class BuildManager : MonoBehaviour
     private WeaponBluePrint weaponToBuild;
     private Node selectedNode;
     [SerializeField] NodeUI nodeUI;
+    [SerializeField] ShopUI shopUI;
+    [SerializeField] private string nodeTag;
+    public string NodeTag { get => nodeTag; }
     private void Awake()
     {
         if (instance != null)
@@ -20,7 +23,7 @@ public class BuildManager : MonoBehaviour
     public bool CanBuild
     {
         get => weaponToBuild != null;
-    }
+    }    
     public void SelectNode(Node node)
     {
         if (selectedNode == node)
@@ -30,13 +33,20 @@ public class BuildManager : MonoBehaviour
         }
         selectedNode = node;
         weaponToBuild = null;
-        nodeUI.SetTarget(node);
-       
+        if (selectedNode.IsExist)
+        {
+            nodeUI.SetTarget(node);
+        }
+        else
+        {
+            shopUI.SetTarget(node);            
+        }        
     }
     public void DeselectNode()
     {
         selectedNode = null;
         nodeUI.TurnOffUI();
+        shopUI.TurnOffUI();
     }
     public void SelectWeaponToBuild(WeaponBluePrint weapon)
     {

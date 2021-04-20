@@ -34,11 +34,11 @@ public class Enemy : MonoBehaviour
     }
     private void Dead()
     {
+        WaveSpawner.EnemyAlives--;
         IsActive = false;
         PlayerInfo.Money += reward;
         anim.SetBool("isDead", true);
-        path.Speed = 0;
-        WaveSpawner.EnemyAlives--;
+        path.Speed = 0;        
         Destroy(gameObject, 3f);
 
     }    

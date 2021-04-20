@@ -5,18 +5,13 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class GameOver : MonoBehaviour
 {
-    [SerializeField] private Text roundtxt;
-
-    private void OnEnable()
-    {
-        roundtxt.text = PlayerInfo.Rounds.ToString();
-    }
+    [SerializeField] private SceneFader sceneFader;    
     public void Retry()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        sceneFader.FadeTo(SceneManager.GetActiveScene().buildIndex);
     }
     public void Menu()
     {
-        
+        sceneFader.FadeTo(0);
     }
 }
