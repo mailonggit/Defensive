@@ -12174,7 +12174,7 @@ GameObject:
   - component: {fileID: 1101647610}
   - component: {fileID: 1101647612}
   - component: {fileID: 1101647611}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: TimerTMP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16744,10 +16744,10 @@ MonoBehaviour:
   timeBetweenWave: 5
   waves:
   - enemy: {fileID: 489228531467904815, guid: 9ce793e32beb0bd40b6350ac021a8785, type: 3}
-    numberOfEnemy: 20
+    numberOfEnemy: 1
     spawnRate: 5
   - enemy: {fileID: 489228531467904815, guid: 9ce793e32beb0bd40b6350ac021a8785, type: 3}
-    numberOfEnemy: 20
+    numberOfEnemy: 5
     spawnRate: 5
   - enemy: {fileID: 489228531467904815, guid: b8000a73568c11e4da71dd9e3d5efafd, type: 3}
     numberOfEnemy: 10
@@ -16821,7 +16821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 494628bb414f3324092c2762cad59352, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initalMoney: 20
+  initalMoney: 40
   initialLive: 10
 --- !u!114 &1535080113
 MonoBehaviour:

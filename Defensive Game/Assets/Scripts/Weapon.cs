@@ -7,14 +7,14 @@ public class Weapon : MonoBehaviour
     private Transform target;
     [Header("Attributes")]    
     [SerializeField] private float range;
-    [SerializeField] private float fireRate;
+    [SerializeField] private float fireRate;    
     private float fireCountdown = 0f;
 
     [Header("Unity Setup Field")]
     [SerializeField] private string enemyTag;    
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform firePoint;
-    private Animator animator;
+    [SerializeField] private Transform firePoint;    
+    private Animator animator;    
     // Start is called before the first frame update
     void Start()
     {
@@ -50,18 +50,18 @@ public class Weapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //target out of range
         if (target == null)
         {
             return;
         }
-        
         if (fireCountdown <= 0f)
         {
             Shoot();
             fireCountdown = 1f / fireRate;
         }
         fireCountdown -= Time.deltaTime;
-        UpdateTarget();
+        UpdateTarget();                
     }
     private void Shoot()
     {        

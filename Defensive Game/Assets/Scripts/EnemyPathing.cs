@@ -6,16 +6,17 @@ public class EnemyPathing : MonoBehaviour
 {
     [SerializeField] private float speed;
     private int waypointIndex = 0;
-    private Transform targetPoint;    
+    private Transform targetPoint;
     public float Speed
     {
         get => this.speed;
         set { this.speed = value; }
     }
+ 
     // Start is called before the first frame update
     void Start()
     {
-        targetPoint = Waypoints.points[0];        
+        targetPoint = Waypoints.points[0];
     }
 
     // Update is called once per frame

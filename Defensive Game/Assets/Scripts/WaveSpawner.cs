@@ -9,51 +9,50 @@ public class WaveSpawner : MonoBehaviour
     [SerializeField] Wave[] waves;
     [SerializeField] TextMeshProUGUI timerTMP;
     private int waveIndex = 0;
-    public static int EnemyAlives = 0;
+    public static float EnemyAlives = 0f;
     private void Start()
     {
-        GetComponent<PlayerInfoUI>().MaxRound = waves.Length;
+        GetComponent<PlayerInfoUI>().MaxRound = waves.Length;        
     }
     void Update()
-    {
-        if (waveIndex == waves.Length)
-        {
-            GetComponent<GameManager>().FinishedLevel();
-            this.enabled = false;
-        }
+    {                    
         //if there is enemy => do nothing
-        if (EnemyAlives > 0)
+        if (EnemyAlives > 0f)
         {
             return;
         }
+        if (waveIndex == waves.Length + 1)
+        {
+            GetComponent<GameManager>().FinishedLevel();
+            this.enabled = false;
+        }        
         //if there is no enemy => count down        
-        if (countdown > 0)
-        {
-            //enabled notification for player to prepare
-            timerTMP.enabled = true;
-            timerTMP.text = "You Have " + Mathf.RoundToInt(countdown).ToString() + "S To Prepare For Wave " + (waveIndex + 1).ToString();            
-        }
-        else
-        {
+        if (countdown < 0f)
+        {            
             //turn off notification and spawn enemy
-            timerTMP.enabled = false;            
-            StartCoroutine(SpawnWave());           
+            timerTMP.enabled = false;
+            StartCoroutine(SpawnWave());
             //reset countdown time
-            countdown = timeBetweenWave; //reset time            
+            countdown = timeBetweenWave; //reset time  
+            return;
         }
+        //enabled notification for player to prepare
+        timerTMP.enabled = true;
+        timerTMP.text = "You Have " + Mathf.RoundToInt(countdown).ToString() + "S To Prepare For Wave " + (waveIndex + 1).ToString();        
         countdown -= Time.deltaTime;
+
     }
-    IEnumerator SpawnWave()
+    private IEnumerator SpawnWave()
     {
         //increase round each time spawn a wave
         PlayerInfo.Rounds++;
         //get single wave
         Wave wave = waves[waveIndex];
 
-        //get amount of enemy alives in this round
         EnemyAlives = wave.NumberOfEnemy;
+        Debug.Log("Before: " + EnemyAlives);
 
-        //spawn each enemies in a wave
+        //spawn each enemies in a wave for 1/rate seconds
         for (int i = 0; i < wave.NumberOfEnemy; i++)
         {
             SpawnEnemy(wave.Enemy);
@@ -64,6 +63,8 @@ public class WaveSpawner : MonoBehaviour
     }
     private void SpawnEnemy(GameObject enemy)
     {
-        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+        Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);        
+        
+        
     }
 }
